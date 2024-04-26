@@ -5,6 +5,11 @@ echo "drachtio version to install is ${VERSION}"
 
 chmod 0777 /usr/local/src
 cd /usr/local/src
+curl -O http://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz && tar -xvf autoconf-2.71.tar.gz
+cd autoconf-2.71 && ./configure && make && sudo make install
+cd /usr/local/src
+rm -Rf autoconf-2.71
+cd /usr/local/src
 git clone https://github.com/drachtio/drachtio-server.git -b ${VERSION}
 cd drachtio-server
 git submodule update --init --recursive
