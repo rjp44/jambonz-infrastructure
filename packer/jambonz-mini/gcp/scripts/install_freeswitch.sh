@@ -1,12 +1,12 @@
 #!/bin/bash
-FREESWITCH_VERSION=v1.10.5
-GRPC_VERSION=c66d2cc
+FREESWITCH_VERSION=v1.10.10
+GRPC_VERSION=v1.57.0
 #GRPC_VERSION=v1.39.1
 #GOOGLE_API_VERSION=v1p1beta1-speech
 GOOGLE_API_VERSION=e9da6f8b469c52b83f900e820be30762e9e05c57
-AWS_SDK_VERSION=1.8.129
-LWS_VERSION=v3.2.3
-MODULES_VERSION=v0.6.15
+AWS_SDK_VERSION=1.11.283
+LWS_VERSION=v4.3.3
+MODULES_VERSION=1.2.9
 
 echo "freeswitch version to install is ${FREESWITCH_VERSION}"
 echo "drachtio modules version to install is ${MODULES_VERSION}"
@@ -43,11 +43,12 @@ git config --global pull.rebase true
 echo done
 git clone https://github.com/signalwire/freeswitch.git -b ${FREESWITCH_VERSION}
 git clone https://github.com/warmcat/libwebsockets.git -b ${LWS_VERSION}
-git clone https://github.com/drachtio/drachtio-freeswitch-modules.git -b ${MODULES_VERSION}
-git clone https://github.com/grpc/grpc -b master
-cd grpc && git checkout ${GRPC_VERSION} && cd ..
+git clone https://github.com/jambonz/freeswitch-modules.git -b ${MODULES_VERSION}
+git clone --depth 1 --branch ${GRPC_VERSION} https://github.com/grpc/grpc
+cd grpc
+git submodule update --init --recursive
 
-cd freeswitch/libs
+cd /usr/local/src/freeswitch/libs
 git clone https://github.com/drachtio/nuance-asr-grpc-api.git -b main
 git clone https://github.com/drachtio/riva-asr-grpc-api.git -b main
 git clone https://github.com/drachtio/soniox-asr-grpc-api.git -b main
@@ -60,25 +61,34 @@ git clone https://github.com/googleapis/googleapis -b master
 cd googleapis && git checkout ${GOOGLE_API_VERSION} && cd ..
 git clone https://github.com/awslabs/aws-c-common.git
 
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_audio_fork /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_aws_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_aws_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_azure_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_azure_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_aws_lex /usr/local/src/freeswitch/src/mod/applications/mod_aws_lex
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_deepgram_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_google_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_google_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_ibm_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_ibm_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_nuance_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nuance_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_nvidia_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nvidia_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_soniox_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_soniox_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_jambonz_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_jambonz_transcribe
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_google_tts /usr/local/src/freeswitch/src/mod/applications/mod_google_tts
-sudo cp -r /usr/local/src/drachtio-freeswitch-modules/modules/mod_dialogflow /usr/local/src/freeswitch/src/mod/applications/mod_dialogflow
+sudo cp -r /usr/local/src/freeswitch-modules/mod_google_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_google_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_audio_fork /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork
+sudo cp -r /usr/local/src/freeswitch-modules/mod_rimelabs_tts /usr/local/src/freeswitch/src/mod/applications/mod_rimelabs_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_aws_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_aws_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_elevenlabs_tts /usr/local/src/freeswitch/src/mod/applications/mod_elevenlabs_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_playht_tts /usr/local/src/freeswitch/src/mod/applications/mod_playht_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_assemblyai_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_assemblyai_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_azure_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_azure_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_ibm_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_ibm_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_nvidia_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nvidia_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_deepgram_tts /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_aws_lex /usr/local/src/freeswitch/src/mod/applications/mod_aws_lex
+sudo cp -r /usr/local/src/freeswitch-modules/mod_soniox_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_soniox_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_whisper_tts /usr/local/src/freeswitch/src/mod/applications/mod_whisper_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_cobalt_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_cobalt_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_dub /usr/local/src/freeswitch/src/mod/applications/mod_dub
+sudo cp -r /usr/local/src/freeswitch-modules/mod_jambonz_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_jambonz_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_azure_tts /usr/local/src/freeswitch/src/mod/applications/mod_azure_tts
+sudo cp -r /usr/local/src/freeswitch-modules/mod_nuance_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nuance_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_deepgram_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_transcribe
+sudo cp -r /usr/local/src/freeswitch-modules/mod_dialogflow /usr/local/src/freeswitch/src/mod/applications/mod_dialogflow
  
 sudo sed -i -r -e 's/(.*AM_CFLAGS\))/\1 -g -O0/g' /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork/Makefile.am
 sudo sed -i -r -e 's/(.*-std=c++11)/\1 -g -O0/g' /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork/Makefile.am
 
 # copy Makefiles and patches into place
 cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac
+cp /tmp/ax_check_compile_flag.m4 /usr/local/src/freeswitch/ax_check_compile_flag.m4
 cp /tmp/Makefile.am.extra /usr/local/src/freeswitch/Makefile.am
 cp /tmp/modules.conf.in.extra /usr/local/src/freeswitch/build/modules.conf.in
 cp /tmp/modules.conf.vanilla.xml.extra /usr/local/src/freeswitch/conf/vanilla/autoload_configs/modules.conf.xml
@@ -96,6 +106,12 @@ cd /usr/local/src/freeswitch/src/mod/applications/mod_avmd
 patch < mod_avmd.c.patch
 cd /usr/local/src/freeswitch/src/mod/applications/mod_httapi
 patch < mod_httapi.c.patch
+cd /usr/local/src/freeswitch/src 
+cp /tmp/switch_event.c . 
+cp /tmp/mod_conference.h /usr/local/src/freeswitch/src/mod/applications/mod_conference 
+cp /tmp/conference_api.c /usr/local/src/freeswitch/src/mod/applications/mod_conference 
+sed -i '/#ifndef cJSON_AS4CPP__h/i #ifndef cJSON__h\n#define cJSON__h' /usr/local/include/aws/core/external/cjson/cJSON.h 
+echo '#endif' >> /usr/local/include/aws/core/e
 
 # build libwebsockets
 cd /usr/local/src/libwebsockets
@@ -127,7 +143,6 @@ make -j 4 && sudo make install
 
 # build grpc
 cd /usr/local/src/grpc
-git submodule update --init --recursive
 mkdir -p cmake/build
 cd cmake/build
 cmake -DBUILD_SHARED_LIBS=ON -DgRPC_SSL_PROVIDER=package -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ../..
