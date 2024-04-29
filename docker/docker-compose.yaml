@@ -1,5 +1,3 @@
-version: "3.9"
-
 # common env var settings
 # not all containers use all of these env vars, but they are common
 # enough it's much simpler to track them in one place
@@ -61,7 +59,7 @@ services:
         ipv4_address: 172.10.0.3
 
   drachtio-sbc:
-    image: drachtio/drachtio-server:latest
+    image: drachtio/drachtio-server:0.8.25
     restart: always
     command: ["drachtio", "--contact", "sip:172.10.0.10;transport=udp,tcp",  "--external-ip",  "${HOST_IP}", "--address", "0.0.0.0", "--port", "9022", "--disable-nat-detection"]
     volumes:
@@ -86,7 +84,7 @@ services:
         ipv4_address: 172.10.0.11
 
   api-server:
-    image: jambonz/api-server:latest
+    image: jambonz/api-server:0.9.0-rc8
     restart: always
     ports:
       - "3000:3000"
@@ -130,7 +128,7 @@ services:
         ipv4_address: 172.10.0.32
 
   call-router:
-    image: jambonz/sbc-call-router:latest
+    image: jambonz/sbc-call-router:0.9.0-rc8
     restart: always
     environment:
       <<: *common-variables
@@ -150,7 +148,7 @@ services:
         ipv4_address: 172.10.0.33
 
   sbc-inbound:
-    image: jambonz/sbc-inbound:latest
+    image: jambonz/sbc-inbound:0.9.0-rc8
     restart: always
     environment:
       <<: *common-variables
@@ -169,7 +167,7 @@ services:
         ipv4_address: 172.10.0.34
 
   sbc-outbound:
-    image: jambonz/sbc-outbound:latest
+    image: jambonz/sbc-outbound:0.9.0-rc8
     restart: always
     environment:
       <<: *common-variables
@@ -186,7 +184,7 @@ services:
         ipv4_address: 172.10.0.35
 
   drachtio-fs:
-    image: drachtio/drachtio-server:latest
+    image: drachtio/drachtio-server:0.8.25
     restart: always
     command: ["drachtio", "--contact", "sip:*;transport=udp", "--contact", "sip:*;transport=tcp", "--address", "0.0.0.0", "--port", "9022"]
     networks:
@@ -194,7 +192,7 @@ services:
         ipv4_address: 172.10.0.50
 
   freeswitch:
-    image: drachtio/drachtio-freeswitch-mrf:0.4.27
+    image: drachtio/drachtio-freeswitch-mrf:0.9.0-rc1
     restart: always
     command: ["freeswitch", "--rtp-range-start", "20000", "--rtp-range-end", "20100"]
     ports:
@@ -206,7 +204,7 @@ services:
         ipv4_address: 172.10.0.51
 
   feature-server:
-    image: jambonz/feature-server:latest
+    image: jambonz/feature-server:0.9.0-rc8
     restart: always
     volumes:
       - ./credentials:/opt/credentials
