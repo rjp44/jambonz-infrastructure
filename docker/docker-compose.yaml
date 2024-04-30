@@ -217,7 +217,7 @@ services:
       HTTP_PORT: 3000
       JAMBONES_SBCS: 172.10.0.10
       JAMBONES_FEATURE_SERVERS: 172.10.0.50:9022:cymru
-      JAMBONES_FREESWITCH: 172.10.0.51:8021:JambonzR0ck$
+      JAMBONES_FREESWITCH: "172.10.0.51:8021:JambonzR0ck$$"
     depends_on:
       - mysql
       - redis
